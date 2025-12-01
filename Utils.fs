@@ -213,6 +213,6 @@ let logWith (f: string) (thing: 'a) =
     thing
 
 // Handy function that takes two dicts and folds to a sum of applying the zip function to pairs of values with the same key
-let zipFoldDicts (dict1: Dictionary<'k, 'v1>) (dict2: Dictionary<'k, 'v2>) (zipFn: 'v1 -> 'v2 -> 'acc) (accInit: 'acc) =
+let zipFoldDicts (dict1: Dictionary<'k, 'v1>) (dict2: Dictionary<'k, 'v2>) (zipFn: 'v1 -> 'v2 -> 'result) (combineFn: 'acc -> 'result -> 'acc) (accInit: 'acc) =
     dict1.Keys
-    |> Seq.fold (fun acc key -> acc + zipFn dict1[key] dict2[key]) accInit
+    |> Seq.fold (fun acc key -> combineFn acc (zipFn dict1[key] dict2[key])) accInit
