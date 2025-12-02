@@ -20,9 +20,8 @@ let splitWordsToIntArray (line: string) = line |> splitWords |> Array.map int
 let splitWordsToIntArrayBy (separator: char) (line: string) =
     line |> splitWordsBy separator |> Array.map int
 
-let splitToIntArray (input: string) : int [] =
-    input.ToCharArray()
-    |> Array.map (fun c -> int c - int '0')
+let splitToIntArray (input: string) : int[] =
+    input.ToCharArray() |> Array.map (fun c -> int c - int '0')
 
 let splitByEmptyLines (input: string) =
     input.Split([| "\n\n" |], StringSplitOptions.RemoveEmptyEntries)
@@ -32,7 +31,7 @@ let inRange n (min, max) = min <= n && n < max
 
 // Array operations
 
-let getMiddleElement (arr: 'a []) =
+let getMiddleElement (arr: 'a[]) =
     let middleIndex = Array.length arr / 2
     arr.[middleIndex]
 
@@ -69,16 +68,16 @@ let parseToMatrixWith (parseElement: char -> 'a) (input: string) =
 
 let charToInt (c: char) = (int c) - (int '0')
 
-let gridSize (arr: 'a [,]) =
+let gridSize (arr: 'a[,]) =
     arr |> Array2D.length1, arr |> Array2D.length2
 
 /// Returns a transposed matrix.
-let transpose (arr: 'a [,]) =
+let transpose (arr: 'a[,]) =
     let rows = Array2D.length1 arr
     let cols = Array2D.length2 arr
     Array2D.init cols rows (fun i j -> arr.[j, i])
 
-let findFirst (value: 'a) (array2d: 'a [,]) =
+let findFirst (value: 'a) (array2d: 'a[,]) =
     let rows = Array2D.length1 array2d
     let cols = Array2D.length2 array2d
 
@@ -101,35 +100,26 @@ let byColumns grid =
 
 /// Returns a new grid with rows shifted in such a way that diagonals become verticals.
 /// Pads the grid with '.', a character we don't care about.
-let diagonalToVerticalShift shiftDirection (grid: char [,]) =
+let diagonalToVerticalShift shiftDirection (grid: char[,]) =
     let rows = Array2D.length1 grid
     let cols = Array2D.length2 grid
     let padding = '.'
 
     Array2D.init rows (rows + cols - 1) (fun r c ->
-        let col =
-            c
-            - (if shiftDirection = ShiftRight then
-                   r
-               else
-                   (rows - 1 - r))
+        let col = c - (if shiftDirection = ShiftRight then r else (rows - 1 - r))
 
-        if col >= 0 && col < cols then
-            grid.[r, col]
-        else
-            padding)
+        if col >= 0 && col < cols then grid.[r, col] else padding)
 
 /// Returns whether the given character array matches the given string.
-let charsMatchString (str: string) (chars: char []) =
+let charsMatchString (str: string) (chars: char[]) =
     let patternArray = str.ToCharArray()
     chars = patternArray
 
 /// Returns whether the given character array matches the given string in either direction.
-let charsMatchStringUnidirectional (str: string) (chars: char []) =
+let charsMatchStringUnidirectional (str: string) (chars: char[]) =
     let patternArray = str.ToCharArray()
 
-    chars = patternArray
-    || chars = Array.rev patternArray
+    chars = patternArray || chars = Array.rev patternArray
 
 type Pos = int * int
 
@@ -163,13 +153,10 @@ let move (orientation: Orientation) (currentPos: Pos) =
     | East -> (x, y + 1)
     | West -> (x, y - 1)
 
-let isOutsideGrid (m: 'a [,]) (pos: Pos) =
+let isOutsideGrid (m: 'a[,]) (pos: Pos) =
     let (x, y) = pos
 
-    x < 0
-    || x >= Array2D.length1 m
-    || y < 0
-    || y >= Array2D.length2 m
+    x < 0 || x >= Array2D.length1 m || y < 0 || y >= Array2D.length2 m
 
 let isOutsideGridDimensions (dim: int * int) (pos: Pos) =
     let (x, y) = pos
@@ -213,6 +200,24 @@ let logWith (f: string) (thing: 'a) =
     thing
 
 // Handy function that takes two dicts and folds to a sum of applying the zip function to pairs of values with the same key
-let zipFoldDicts (dict1: Dictionary<'k, 'v1>) (dict2: Dictionary<'k, 'v2>) (zipFn: 'v1 -> 'v2 -> 'result) (combineFn: 'acc -> 'result -> 'acc) (accInit: 'acc) =
+let zipFoldDicts
+    (dict1: Dictionary<'k, 'v1>)
+    (dict2: Dictionary<'k, 'v2>)
+    (zipFn: 'v1 -> 'v2 -> 'result)
+    (combineFn: 'acc -> 'result -> 'acc)
+    (accInit: 'acc)
+    =
     dict1.Keys
     |> Seq.fold (fun acc key -> combineFn acc (zipFn dict1[key] dict2[key])) accInit
+
+let greatestDivisor n =
+    let rec smallestFactor i =
+        if i * i > n then n
+        elif n % i = 0 then i
+        else smallestFactor (i + 1)
+
+    if n <= 1 then
+        None
+    else
+        let smallest = smallestFactor 2
+        Some(n / smallest)
