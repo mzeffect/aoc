@@ -1,26 +1,20 @@
 module AdventOfCode.Year2025.Day02b
 
 open AdventOfCode.Utils
+open System.Text.RegularExpressions
 
-let isInvalidId (id: int64) =
-    let s = string id
-    let maxRepeatingLength = greatestDivisor (String.length s)
+// Compile regex once
+let private invalidIdRegex = Regex(@"^(.+)\1+$", RegexOptions.Compiled)
 
-    match maxRepeatingLength with
-    | None -> false
-    | Some l ->
-        seq { l .. -1 .. 1 }
-        |> Seq.filter (fun length -> s.ToCharArray() |> Seq.chunkBySize length |> Seq.distinct |> Seq.length = 1)
-        |> Seq.isEmpty
-        |> not
+let isInvalidId id =
+    invalidIdRegex.IsMatch(string id)
 
 let solve (input: string) =
     input
     |> splitWordsBy ','
-    |> Seq.map (splitWordsBy '-' >> Array.map int64)
-    |> Seq.fold
-        (fun (invalidCount) boundaries ->
-            invalidCount
-            + (seq { boundaries.[0] .. boundaries.[1] } |> Seq.filter isInvalidId |> Seq.sum))
-        0L
+    |> Seq.map (splitWordsBy '-')
+    |> Seq.sumBy (fun boundaries ->
+        seq { int64 boundaries.[0] .. int64 boundaries.[1] } 
+        |> Seq.filter isInvalidId 
+        |> Seq.sum)
     |> string
