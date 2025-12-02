@@ -1,12 +1,12 @@
 # Advent of Code
 
-Solutions for [Advent of Code](https://adventofcode.com) across multiple years.
+Solutions for [Advent of Code](https://adventofcode.com).
 
 ## Structure
 
 ```
-aoc-2025/
-├── Utils.fs              # Shared utilities across all years
+aoc/
+├── Utils.fs              # Shared utilities
 ├── Year2025/             # Solutions for 2025
 │   ├── Day01a.fs
 │   ├── Day01b.fs
@@ -67,6 +67,8 @@ The examples act as tests, they will be passed to the solver and the result will
 
 You will be notified if your code fails to pass on the examples.
 
+You can also use `./bootstrap.sh 2025/Day01a` to create the required files.
+
 ### Write the solver
 
 A solver is a function that takes a string (input) and returns a string (solution).
@@ -90,6 +92,5 @@ To add solutions for a new year:
 
 1. Create a new folder, e.g. `Year2026/`
 2. Create a new data folder, e.g. `data/2026/`
-3. Update the year in `Program.fs` (line 75 and 79) to support the new year
 
-The shared `Utils.fs` module can be used across all years.
+The shared utils module can be used across all years.
